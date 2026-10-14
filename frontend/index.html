@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InquiryFlow | Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="background-glow glow-one"></div>
+  <div class="background-glow glow-two"></div>
+
+  <div class="app-layout">
+    <aside class="sidebar">
+      <a href="#" class="brand">
+        <span class="brand-icon">I</span>
+        <span>Inquiry<span class="brand-accent">Flow</span></span>
+      </a>
+
+      <div class="sidebar-label">WORKSPACE</div>
+
+      <nav class="sidebar-nav">
+        <a href="#dashboard" class="nav-link active">
+          <span class="nav-icon">▦</span>
+          Dashboard
+        </a>
+        <a href="#inquiries" class="nav-link">
+          <span class="nav-icon">✉</span>
+          All Inquiries
+          <span class="nav-count" id="sidebarCount">0</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="profile-avatar">AD</div>
+        <div class="profile-info">
+          <strong>Admin User</strong>
+          <span>Administrator</span>
+        </div>
+        <span class="online-dot"></span>
+      </div>
+    </aside>
+
+    <main class="main-content" id="dashboard">
+      <header class="topbar">
+        <div>
+          <div class="breadcrumb">Workspace / <span>Dashboard</span></div>
+          <h1>Inquiry Dashboard</h1>
+          <p class="page-subtitle">
+            Manage customer conversations from one place.
+          </p>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="live-indicator">
+            <span class="online-dot"></span>
+            API Connected
+          </div>
+          <button class="primary-button" id="openAddModal">
+            <span>＋</span> New Inquiry
+          </button>
+        </div>
+      </header>
+
+      <section class="stats-grid">
+        <article class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Total Inquiries</span>
+            <span class="stat-icon purple">✉</span>
+          </div>
+          <div class="stat-number" id="totalCount">0</div>
+          <p class="stat-description">All customer messages</p>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">New Inquiries</span>
+            <span class="stat-icon blue">✦</span>
+          </div>
+          <div class="stat-number" id="newCount">0</div>
+          <p class="stat-description">Waiting for review</p>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">In Progress</span>
+            <span class="stat-icon orange">◷</span>
+          </div>
+          <div class="stat-number" id="progressCount">0</div>
+          <p class="stat-description">Currently being handled</p>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Resolved</span>
+            <span class="stat-icon green">✓</span>
+          </div>
+          <div class="stat-number" id="resolvedCount">0</div>
+          <p class="stat-description">Successfully completed</p>
+        </article>
+      </section>
+
+      <section class="content-card" id="inquiries">
+        <div class="section-heading">
+          <div>
+            <h2>Customer Inquiries</h2>
+            <p>Review, organize and respond to incoming requests.</p>
+          </div>
+
+          <button class="secondary-button" id="exportButton">
+            <span>↓</span> Export CSV
+          </button>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-box">
+            <span class="search-icon">⌕</span>
+            <input
+              type="search"
+              id="searchInput"
+              placeholder="Search name, email or subject..."
+            >
+          </div>
+
+          <select id="statusFilter" aria-label="Filter by status">
+            <option value="All">All statuses</option>
+            <option value="New">New</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+
+          <button class="secondary-button" id="refreshButton">
+            ↻ Refresh
+          </button>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>CONTACT</th>
+                <th>SUBJECT</th>
+                <th>DATE RECEIVED</th>
+                <th>STATUS</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="inquiryTableBody">
+              <tr>
+                <td colspan="5" class="empty-state">Loading inquiries...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-footer">
+          <span id="resultsText">Loading results...</span>
+          <span class="footer-note">InquiryFlow Admin Panel</span>
+        </div>
+      </section>
+
+      <footer class="page-footer">
+        <span>© 2026 InquiryFlow</span>
+        <span>Customer Inquiry Management</span>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Add inquiry modal -->
+  <div class="modal-overlay" id="addModal">
+    <div class="modal-card">
+      <div class="modal-heading">
+        <div>
+          <h2>Create New Inquiry</h2>
+          <p>Add a customer request to the dashboard.</p>
+        </div>
+        <button class="close-button" id="closeAddModal" aria-label="Close">
+          ×
+        </button>
+      </div>
+
+      <form id="inquiryForm">
+        <label for="customerName">Customer Name</label>
+        <input
+          type="text"
+          id="customerName"
+          placeholder="Enter full name"
+          required
+        >
+
+        <label for="customerEmail">Email Address</label>
+        <input
+          type="email"
+          id="customerEmail"
+          placeholder="customer@example.com"
+          required
+        >
+
+        <label for="inquirySubject">Subject</label>
+        <input
+          type="text"
+          id="inquirySubject"
+          placeholder="What is the inquiry about?"
+          required
+        >
+
+        <label for="inquiryMessage">Message</label>
+        <textarea
+          id="inquiryMessage"
+          rows="4"
+          placeholder="Enter the customer's message..."
+          required
+        ></textarea>
+
+        <div class="form-actions">
+          <button type="button" class="secondary-button" id="cancelAdd">
+            Cancel
+          </button>
+          <button type="submit" class="primary-button" id="submitInquiry">
+            Create Inquiry
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Inquiry details modal -->
+  <div class="modal-overlay" id="detailsModal">
+    <div class="modal-card details-card">
+      <div class="modal-heading">
+        <div>
+          <span class="eyebrow">INQUIRY DETAILS</span>
+          <h2 id="detailSubject">Inquiry</h2>
+        </div>
+        <button class="close-button" id="closeDetailsModal" aria-label="Close">
+          ×
+        </button>
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-item">
+          <span>Customer</span>
+          <strong id="detailName"></strong>
+        </div>
+        <div class="detail-item">
+          <span>Email</span>
+          <strong id="detailEmail"></strong>
+        </div>
+        <div class="detail-item">
+          <span>Date Received</span>
+          <strong id="detailDate"></strong>
+        </div>
+        <div class="detail-item">
+          <span>Current Status</span>
+          <strong id="detailStatus"></strong>
+        </div>
+      </div>
+
+      <div class="message-panel">
+        <span>MESSAGE</span>
+        <p id="detailMessage"></p>
+      </div>
+
+      <div class="form-actions">
+        <button class="secondary-button" id="closeDetailsButton">
+          Close
+        </button>
+        <button class="primary-button" id="detailsStatusButton">
+          Update Status
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
